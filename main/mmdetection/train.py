@@ -11,7 +11,7 @@ import argparse
 import os
 import wandb
 
-wandb.init(project="mmdetection") #나중에 팀 프로젝트로 바꿔주기
+wandb.init(project="MMDetection-tutorial") #나중에 팀 프로젝트로 바꿔주기
 
 def wandb_config(cfg,args):
     config_dict  = {'seed'         : args.seed,
@@ -27,7 +27,7 @@ def wandb_config(cfg,args):
 def modify_config(cfg, args):
     classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
            "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
-    root = '../../dataset/'
+    root = '/opt/ml/dataset/'
     cfg.log_config.hooks = [
         dict(type='TextLoggerHook'),
         dict(type='MMDetWandbHook',
