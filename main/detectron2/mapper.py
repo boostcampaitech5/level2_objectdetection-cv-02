@@ -5,13 +5,14 @@ from detectron2.data import detection_utils as utils
 import detectron2.data.transforms as T
 
 def MyMapper(dataset_dict):
+
     dataset_dict = copy.deepcopy(dataset_dict)
     image = utils.read_image(dataset_dict['file_name'], format='BGR')
     
     transform_list = [
         T.RandomFlip(prob=0.5, horizontal=False, vertical=True),
-        T.RandomBrightness(0.8, 1.8),
-        T.RandomContrast(0.6, 1.3)
+        T.RandomBrightness(0.8, 1.2),
+        T.RandomContrast(0.6, 1.3),
     ]
     
     image, transforms = T.apply_transform_gens(transform_list, image)
@@ -31,7 +32,7 @@ def MyMapper(dataset_dict):
 
 
 def InferenceMapper(dataset_dict):
-    
+
     dataset_dict = copy.deepcopy(dataset_dict)
     image = utils.read_image(dataset_dict['file_name'], format='BGR')
     

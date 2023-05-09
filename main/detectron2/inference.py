@@ -6,6 +6,7 @@ import pandas as pd
 import argparse
 import numpy as np
 import random
+import datetime
 
 import detectron2
 from detectron2.data import detection_utils as utils
@@ -21,19 +22,12 @@ from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 from detectron2.data import build_detection_test_loader
 
 from mapper import InferenceMapper
+from utils import seed_everything
+from utils import inference_config_setting
 
-#fixed seed
-def seed_everything(seed):
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)  
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    np.random.seed(seed)
-    random.seed(seed)
-
-def inference(save_dir, model_name, args):
-    seed_everything(args.seed) #fixed seed
+def inference(save_dir, args):
+    #fixed seed
+    seed_everything(args.seed)
 
     # Register Dataset
     try:
@@ -43,24 +37,10 @@ def inference(save_dir, model_name, args):
 
     # config 불러오기
     cfg = get_cfg()
-    cfg.merge_from_file(model_zoo.get_config_file(f'COCO-Detection/{model_name}.yaml'))
-
-    # config 수정하기
-    cfg.DATASETS.TEST = ('coco_trash_test',)
-
-    cfg.DATALOADER.NUM_WOREKRS = 2
-
-    cfg.OUTPUT_DIR = save_dir
-
-    cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, args.model_file_name)
-
-    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 128
-    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10
-    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.3
+    cfg = inference_config_setting(cfg, args, save_dir)
 
     # model
     predictor = DefaultPredictor(cfg)
-
 
     # test loader
     test_loader = build_detection_test_loader(cfg, 'coco_trash_test', InferenceMapper)
@@ -92,11 +72,14 @@ def inference(save_dir, model_name, args):
     submission = pd.DataFrame()
     submission['PredictionString'] = prediction_strings
     submission['image_id'] = file_names
-    submission.to_csv(os.path.join(cfg.OUTPUT_DIR, f'{model_name}.csv'), index=None)
+    submission.to_csv(os.path.join(cfg.OUTPUT_DIR, f'{args.model}.csv'), index=None)
 
+def parse_args():
+    """_summary_
 
-
-if __name__ == "__main__":
+    Returns:
+        args : args 설정값 
+    """
     parser = argparse.ArgumentParser(description='Obejct Detection inference by Detectron2')
 
     #parser 
@@ -106,12 +89,17 @@ if __name__ == "__main__":
     parser.add_argument('--save_dir', type=str, default='./save/')
     parser.add_argument('--model', type=str, default='faster_rcnn_R_101_FPN_3x', help='train model name (default : faster_rcnn_R_101_FPN_3x)')
     parser.add_argument('--model_file_name', type=str, default='model_final.pth', help='load model .pth file name')
-
+    parser.add_argument('--train_date', type=str, default='2023-05-09', help='train date')
     args = parser.parse_args()
+    return args
 
-    save_dir = os.path.join(args.save_dir, args.model)
-    model_name = args.model
-    inference(save_dir, model_name, args)
+if __name__ == "__main__":
+    #args 설정
+    args = parse_args()
+
+    save_dir = os.path.join(args.save_dir, args.model, args.train_date)
+
+    inference(save_dir, args)
 
 
 
