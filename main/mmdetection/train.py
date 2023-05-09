@@ -113,6 +113,6 @@ if __name__ == '__main__':
 ## 경우 5 : swin
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/swin/retinanet_swin-t-p4-w7_fpn_1x_coco.py --exp_name test_swin
 
-## 지켜주세요 ##
+## 지켜주세용 ##
 ## exp_name : 이름스펠링_modeltype_neck~ 뒤는 알아서 맘대로 (자기가 마음대로 설정해서 비교하기)
 ## (ex) dh_cascade_rcnn_fpn_1,2,3...
