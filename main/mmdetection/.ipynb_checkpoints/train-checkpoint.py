@@ -11,11 +11,10 @@ import argparse
 import os
 import wandb
 
-wandb.init(project="mmdetection")
 def wandb_config(cfg,args):
     config_dict  = {'seed'         : args.seed,
                     'config'       : args.config,
-                    'output_dir'   : args.output_dir,
+                    'exp_name'     : args.exp_name,
                     'model_type'   : cfg.model.type,
                     'backbone'     : cfg.model.backbone.type,
                     'neck'         : cfg.model.neck.type
@@ -27,7 +26,7 @@ def wandb_config(cfg,args):
 def modify_config(cfg, args):
     classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
            "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
-    root = '../../dataset/'
+    root = "/opt/ml/dataset/'
     cfg.log_config.hooks = [
         dict(type='TextLoggerHook'),
         dict(type='MMDetWandbHook',
@@ -54,7 +53,7 @@ def modify_config(cfg, args):
     cfg.data.test.pipeline[1]['img_scale'] = (1024,1024) # Resize
 
     cfg.data.samples_per_gpu = 4
-    output_dir = args.output_dir
+    output_dir = args.exp_name
     if not os.path.exists(output_root + output_dir):
         os.makedirs(output_root + output_dir) # 저장 경로 없으면 생성
     cfg.work_dir = output_root + output_dir # 저장 경로 변경
@@ -80,8 +79,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('--config', required=True, help='Please write down .py as the absolute path')
     parser.add_argument('--seed', type=int, default=2022, help='default : 2022')
-    parser.add_argument('--output_dir', required=True, type=str, help='Please specify the desired directory name')
-    parser.add_argument('--exp_name', type=str, default='dahyeon', help='wandb exp name (default: dahyeon)')
+    parser.add_argument('--exp_name', required=True, type=str, help='save dir name and wandb') #저장할 폴더명 and wandb 실험명 생성
     args = parser.parse_args()
     return args
 
@@ -92,14 +90,16 @@ if __name__ == '__main__':
     model = build_detector(cfg.model)
     model.init_weights() 
     datasets = [build_dataset(cfg.data.train)]
-    wand.config = wandb_config(cfg,args)
+    wandb.config = wandb_config(cfg,args)
+    
+    wandb.init(project="MMDetection-tutorial", name=args.exp_name)
     train_detector(model, datasets[0], cfg, distributed=False, validate=True)
 
 ## 경우 1 : faster_cnn
-## python train.py --config /opt/ml/baseline/mmdetection/configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py --output_dir test_faster
+## python train.py --config /opt/ml/baseline/mmdetection/configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py --exp_name test_faster
 ## 경우 2 : cascade_rcnn
-## python train.py --config /opt/ml/baseline/mmdetection/configs/cascade_rcnn/cascade_rcnn_r50_fpn_1x_coco.py --output_dir test_cas
+## python train.py --config /opt/ml/baseline/mmdetection/configs/cascade_rcnn/cascade_rcnn_r50_fpn_1x_coco.py --exp_name test_cas
 ## 경우 3 : retinanet
-## python train.py --config /opt/ml/baseline/mmdetection/configs/retinanet/retinanet_r50_caffe_fpn_mstrain_3x_coco.py --output_dir test_retina 
+## python train.py --config /opt/ml/baseline/mmdetection/configs/retinanet/retinanet_r50_caffe_fpn_mstrain_3x_coco.py --exp_name test_retina 
 ## 경우 4 : TOOD
-## python train.py --config /opt/ml/baseline/mmdetection/configs/tood/tood_r50_fpn_anchor_based_1x_coco.py --output_dir test_tood
+## python train.py --config /opt/ml/baseline/mmdetection/configs/tood/tood_r50_fpn_anchor_based_1x_coco.py --exp_name test_tood
