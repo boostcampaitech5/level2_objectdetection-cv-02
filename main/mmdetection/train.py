@@ -11,14 +11,18 @@ import argparse
 import os
 import wandb
 
-# wandb.init(project="mmdetection")
-# def wandb_config(args):
-#     config_dict  = {'seed'         : args.seed,
-#                     'config'       : args.config,
-#                     'output_dir'   : args.output_dir
-#                     }
-#     return config_dict
+wandb.init(project="mmdetection") #나중에 팀 프로젝트로 바꿔주기
 
+def wandb_config(cfg,args):
+    config_dict  = {'seed'         : args.seed,
+                    'config'       : args.config,
+                    'output_dir'   : args.output_dir,
+                    'model_type'   : cfg.model.type,
+                    'backbone'     : cfg.model.backbone.type,
+                    'neck'         : cfg.model.neck.type,
+                    'image_scale'  : cfg.data.train.pipeline[2]['img_scale']      
+                    }
+    return config_dict
 
 def modify_config(cfg, args):
     classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
@@ -86,8 +90,10 @@ if __name__ == '__main__':
     cfg = Config.fromfile(args.config)  
     modify_config(cfg, args)  
     model = build_detector(cfg.model)
+    model.init_weights() 
     datasets = [build_dataset(cfg.data.train)]
-    train_detector(model, datasets[0], cfg, distributed=False, validate=True)
+    wandb.config = wandb_config(cfg, args)
+    train_detector(model, datasets[0], cfg, distributed=False, validate=False)
 
 ## 경우 1 : faster_cnn
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py --output_dir test_faster
