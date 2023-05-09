@@ -10,14 +10,17 @@ from mmdet.utils import get_device
 import argparse
 import os
 import wandb
+import json
+import wandb
 
 def wandb_config(cfg,args):
-    config_dict  = {'seed'         : args.seed,
+    config_dict  = {
+                    'seed'         : args.seed,
                     'config'       : args.config,
                     'exp_name'     : args.exp_name,
                     'model_type'   : cfg.model.type,
                     'backbone'     : cfg.model.backbone.type,
-                    'neck'         : cfg.model.neck.type
+                    'neck'         : cfg.model.neck.type,
                     'image_scale'  : cfg.data.train.pipeline[2]['img_scale']      
                     }
     return config_dict
@@ -26,11 +29,11 @@ def wandb_config(cfg,args):
 def modify_config(cfg, args):
     classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
            "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
-    root = "/opt/ml/dataset/'
+    root = "/opt/ml/dataset/"
     cfg.log_config.hooks = [
         dict(type='TextLoggerHook'),
         dict(type='MMDetWandbHook',
-            init_kwargs={'project': 'MMDetection-tutorial'},
+            init_kwargs={'project': 'mmdetection'},
             interval=10,
             log_checkpoint=True,
             log_checkpoint_metadata=True,
@@ -84,15 +87,19 @@ def parse_args():
     return args
 
 if __name__ == '__main__':
+    """_summary_
+    """
     args = parse_args()
     cfg = Config.fromfile(args.config)  
     modify_config(cfg, args)  
     model = build_detector(cfg.model)
     model.init_weights() 
     datasets = [build_dataset(cfg.data.train)]
-    wandb.config = wandb_config(cfg,args)
-    
-    wandb.init(project="MMDetection-tutorial", name=args.exp_name)
+    wandb_cfg = wandb_config(cfg,args)
+    wandb.init(project="mmdetection", config=wandb_cfg, name=args.exp_name)
+    # with open('config.json', 'w') as f:
+    #     json.dump(wandb_cfg, f)
+    wandb.save("config.json")
     train_detector(model, datasets[0], cfg, distributed=False, validate=True)
 
 ## 경우 1 : faster_cnn
@@ -103,3 +110,9 @@ if __name__ == '__main__':
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/retinanet/retinanet_r50_caffe_fpn_mstrain_3x_coco.py --exp_name test_retina 
 ## 경우 4 : TOOD
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/tood/tood_r50_fpn_anchor_based_1x_coco.py --exp_name test_tood
+## 경우 5 : swin
+## python train.py --config /opt/ml/baseline/mmdetection/configs/swin/retinanet_swin-t-p4-w7_fpn_1x_coco.py --exp_name test_swin
+
+## 지켜주세요 ##
+## exp_name : 이름스펠링_modeltype_neck~ 뒤는 알아서 맘대로 (자기가 마음대로 설정해서 비교하기)
+## (ex) dh_cascade_rcnn_fpn_1,2,3...
