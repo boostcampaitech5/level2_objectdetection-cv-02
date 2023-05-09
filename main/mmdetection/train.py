@@ -11,12 +11,28 @@ import argparse
 import os
 import wandb
 
-wandb.init(project="mmdetection") #나중에 팀 프로젝트로 바꿔주기
+# wandb.init(project="mmdetection")
+# def wandb_config(args):
+#     config_dict  = {'seed'         : args.seed,
+#                     'config'       : args.config,
+#                     'output_dir'   : args.output_dir
+#                     }
+#     return config_dict
+
 
 def modify_config(cfg, args):
     classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
            "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
     root = '../../dataset/'
+    cfg.log_config.hooks = [
+        dict(type='TextLoggerHook'),
+        dict(type='MMDetWandbHook',
+            init_kwargs={'project': 'MMDetection-tutorial'},
+            interval=10,
+            log_checkpoint=True,
+            log_checkpoint_metadata=True,
+            num_eval_images=0)]
+
     output_root = '/opt/ml/baseline/mmdetection/work_dirs/'
     cfg.data.train.classes = classes
     cfg.data.train.img_prefix = root
@@ -35,16 +51,6 @@ def modify_config(cfg, args):
 
     cfg.data.samples_per_gpu = 4
     output_dir = args.output_dir
-    
-    cfg.log_config.hooks = [
-        dict(type='TextLoggerHook'),
-        dict(type='MMDetWandbHook',
-            init_kwargs={'project': 'mmdetection'},
-            interval=10,
-            log_checkpoint=True,
-            log_checkpoint_metadata=True,
-            num_eval_images=100)]
-    
     if not os.path.exists(output_root + output_dir):
         os.makedirs(output_root + output_dir) # 저장 경로 없으면 생성
     cfg.work_dir = output_root + output_dir # 저장 경로 변경
@@ -81,7 +87,7 @@ if __name__ == '__main__':
     modify_config(cfg, args)  
     model = build_detector(cfg.model)
     datasets = [build_dataset(cfg.data.train)]
-    train_detector(model, datasets[0], cfg, distributed=False, validate=False)
+    train_detector(model, datasets[0], cfg, distributed=False, validate=True)
 
 ## 경우 1 : faster_cnn
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py --output_dir test_faster
