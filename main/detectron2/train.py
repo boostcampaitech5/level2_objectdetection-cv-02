@@ -31,12 +31,13 @@ def parse_args():
 
     #parser 
     parser.add_argument('--seed', type=int, default=42, help='Fixed Seed (default : 42)')
-    parser.add_argument('--data_dir', type=str, default='../../dataset/', help='Train data dir (default : ../../dataset/)')
+    parser.add_argument('--data_dir', type=str, default='/opt/ml/dataset/', help='Train data dir (default : opt/ml/dataset/)')
     parser.add_argument('--train_json', type=str, default='./json/detectron2_train.json', help='train.json dir (default : ./json/detectron2_train.json)')
     parser.add_argument('--val_json', type=str, default='./json/detectron2_val.json', help='val.json dir (default : ./json/detectron2_val.json)')
 
     parser.add_argument('--save_dir', type=str, default='./save/')
     parser.add_argument('--name', type=str, default='ho', help="spelling your name (default : ho)"  )
+    parser.add_argument('--config_path', type=str, default='COCO-Detection', help='select config path (default : COCO-Detection/)')
     parser.add_argument('--model', type=str, default='faster_rcnn_R_101_FPN_3x', help='train model name (default : faster_rcnn_R_101_FPN_3x)')
     parser.add_argument('--epochs', type=int, default=10, help='train epochs (default = 10)')
     args = parser.parse_args()
