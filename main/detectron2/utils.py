@@ -33,14 +33,14 @@ def train_config_setting(cfg:dict, args:dict, save_dir:str):
     Returns:
         cfg : 변경된 config 파일 리턴
     """
-    cfg.merge_from_file(model_zoo.get_config_file(f'Misc/{args.model}.yaml'))
+    cfg.merge_from_file(model_zoo.get_config_file(f'{args.config_path}/{args.model}.yaml'))
 
     cfg.DATASETS.TRAIN = ('coco_trash_train',)
     cfg.DATASETS.TEST = ('coco_trash_val',)
 
     cfg.DATALOADER.NUM_WOREKRS = 2
 
-    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(f'Misc/{args.model}.yaml')
+    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(f'{args.config_path}/{args.model}.yaml')
     cfg.MODEL.MASK_ON = False
     cfg.SOLVER.IMS_PER_BATCH = 5
 
