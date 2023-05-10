@@ -31,7 +31,7 @@ def parse_args():
 
     #parser 
     parser.add_argument('--seed', type=int, default=42, help='Fixed Seed (default : 42)')
-    parser.add_argument('--data_dir', type=str, default='../../dataset/', help='Train data dir (default : ../../dataset/)')
+    parser.add_argument('--data_dir', type=str, default='/opt/ml/dataset/', help='Train data dir (default : opt/ml/dataset/)')
     parser.add_argument('--train_json', type=str, default='./json/detectron2_train.json', help='train.json dir (default : ./json/detectron2_train.json)')
     parser.add_argument('--val_json', type=str, default='./json/detectron2_val.json', help='val.json dir (default : ./json/detectron2_val.json)')
 
