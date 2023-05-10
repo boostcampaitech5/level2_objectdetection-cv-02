@@ -65,7 +65,7 @@ def modify_config(cfg, args):
     cfg.seed = args.seed
     cfg.gpu_ids = [0]
     roi_head_type = 0
-    no_roi_head = ['RetinaNet', 'TOOD']
+    no_roi_head = ['RetinaNet','PPA','YOLOV3' 'TOOD']
     if cfg.model.type in no_roi_head : #roi head가 없으면
         cfg.model.bbox_head.num_classes = 10 
     
@@ -118,6 +118,11 @@ if __name__ == '__main__':
 ## 경우 5 : swin #뭔가 이상함 일단 보류
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/swin/retinanet_swin-t-p4-w7_fpn_1x_coco.py --exp_name test_swin
 
-## 지켜주세용 ##
+
+
+##경우 n : ppa  #exp_name 지정할것
+## python train.py --config /opt/ml/baseline/mmdetection/configs/paa/paa_r101_fpn_2x_coco.py 
+
+
 ## exp_name : 이름스펠링_modeltype_neck~ 뒤는 알아서 맘대로 
 ## (ex) dh_cascade_rcnn_fpn_1,2,3...
