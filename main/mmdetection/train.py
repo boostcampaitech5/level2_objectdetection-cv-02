@@ -56,7 +56,7 @@ def modify_config(cfg, args):
     cfg.data.test.ann_file = root + 'test.json' # test json 정보
     cfg.data.test.pipeline[1]['img_scale'] = (1024,1024) # Resize
 
-    cfg.data.samples_per_gpu = 4
+    cfg.data.samples_per_gpu = args.batch_size
     output_dir = args.exp_name
     if not os.path.exists(output_root + output_dir):
         os.makedirs(output_root + output_dir) # 저장 경로 없으면 생성
@@ -90,6 +90,7 @@ def parse_args():
     parser.add_argument('--seed', type=int, default=2022, help='default : 2022')
     parser.add_argument('--epoch', type=int, help = "max epoches")
     parser.add_argument('--exp_name', required=True, type=str, help='save dir name and wandb') #저장할 폴더명/wandb 실험명 생성
+    parser.add_argument('--batch_size', type=int, default=4, help="batch_size , default = 4")
     args = parser.parse_args()
     return args
 
