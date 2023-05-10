@@ -31,7 +31,7 @@ def inference(save_dir, args):
 
     # Register Dataset
     try:
-        register_coco_instances('coco_trash_test', {}, '../../dataset/test.json', args.data_dir)
+        register_coco_instances('coco_trash_test', {}, '/opt/ml/dataset/test.json', args.data_dir)
     except AssertionError:
         pass
 
@@ -84,10 +84,11 @@ def parse_args():
 
     #parser 
     parser.add_argument('--seed', type=int, default=42, help='Fixed Seed (default : 42)')
-    parser.add_argument('--data_dir', type=str, default='../../dataset/', help='inference data dir (default : ../../dataset/)')
-    
+    parser.add_argument('--data_dir', type=str, default='/opt/ml/dataset/', help='inference data dir (default : /opt/ml/dataset/)')
     parser.add_argument('--save_dir', type=str, default='./save/')
+
     parser.add_argument('--model', type=str, default='faster_rcnn_R_101_FPN_3x', help='train model name (default : faster_rcnn_R_101_FPN_3x)')
+    parser.add_argument('--config_path', type=str, default='COCO-Detection', help='select config path (default : COCO-Detection)')
     parser.add_argument('--model_file_name', type=str, default='model_final.pth', help='load model .pth file name')
     parser.add_argument('--train_date', type=str, default='2023-05-09', help='train date')
     args = parser.parse_args()
