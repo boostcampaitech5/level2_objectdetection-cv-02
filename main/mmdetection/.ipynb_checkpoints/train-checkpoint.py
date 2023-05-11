@@ -21,6 +21,7 @@ def wandb_config(cfg,args):
                     'model_type'   : cfg.model.type,
                     'backbone'     : cfg.model.backbone.type,
                     'neck'         : cfg.model.neck.type,
+                    'epoch'        : cfg.runner.max_epochs,
                     'image_scale'  : cfg.data.train.pipeline[2]['img_scale']      
                     }
     return config_dict
@@ -63,6 +64,7 @@ def modify_config(cfg, args):
    
     cfg.seed = args.seed
     cfg.gpu_ids = [0]
+    roi_head_type = 0
     no_roi_head = ['RetinaNet', 'TOOD']
     if cfg.model.type in no_roi_head : #roi head가 없으면
         cfg.model.bbox_head.num_classes = 10 
@@ -71,8 +73,12 @@ def modify_config(cfg, args):
         if isinstance(cfg.model.roi_head.bbox_head, list):
             for i in range(len(cfg.model.roi_head.bbox_head)):
                 cfg.model.roi_head.bbox_head[i].num_classes = 10 
+                roi_head_type = 1
         else : #그냥 딕셔너리면
             cfg.model.roi_head.bbox_head.num_classes = 10 
+            roi_head_type = 2
+    
+    cfg.runner.max_epochs = args.epoch
     cfg.optimizer_config.grad_clip = dict(max_norm=35, norm_type=2)
     cfg.checkpoint_config = dict(max_keep_ckpts=3, interval=1)
     cfg.device = get_device()
@@ -82,13 +88,12 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('--config', required=True, help='Please write down .py as the absolute path')
     parser.add_argument('--seed', type=int, default=2022, help='default : 2022')
-    parser.add_argument('--exp_name', required=True, type=str, help='save dir name and wandb') #저장할 폴더명 and wandb 실험명 생성
+    parser.add_argument('--epoch', type=int, help = "max epoches")
+    parser.add_argument('--exp_name', required=True, type=str, help='save dir name and wandb') #저장할 폴더명/wandb 실험명 생성
     args = parser.parse_args()
     return args
 
 if __name__ == '__main__':
-    """_summary_
-    """
     args = parse_args()
     cfg = Config.fromfile(args.config)  
     modify_config(cfg, args)  
@@ -97,8 +102,7 @@ if __name__ == '__main__':
     datasets = [build_dataset(cfg.data.train)]
     wandb_cfg = wandb_config(cfg,args)
     wandb.init(project="mmdetection", config=wandb_cfg, name=args.exp_name)
-    # with open('config.json', 'w') as f:
-    #     json.dump(wandb_cfg, f)
+
     wandb.save("config.json")
     train_detector(model, datasets[0], cfg, distributed=False, validate=True)
 
@@ -110,9 +114,9 @@ if __name__ == '__main__':
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/retinanet/retinanet_r50_caffe_fpn_mstrain_3x_coco.py --exp_name test_retina 
 ## 경우 4 : TOOD
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/tood/tood_r50_fpn_anchor_based_1x_coco.py --exp_name test_tood
-## 경우 5 : swin
+## 경우 5 : swin #뭔가 이상함 일단 보류
 ## python train.py --config /opt/ml/baseline/mmdetection/configs/swin/retinanet_swin-t-p4-w7_fpn_1x_coco.py --exp_name test_swin
 
-## 지켜주세요 ##
-## exp_name : 이름스펠링_modeltype_neck~ 뒤는 알아서 맘대로 (자기가 마음대로 설정해서 비교하기)
+## 지켜주세용 ##
+## exp_name : 이름스펠링_modeltype_neck~ 뒤는 알아서 맘대로 
 ## (ex) dh_cascade_rcnn_fpn_1,2,3...

@@ -36,8 +36,8 @@ def modify_config(cfg, args):
         dict(type='MMDetWandbHook',
             init_kwargs={'project': 'mmdetection'},
             interval=10,
-            log_checkpoint=True,
-            log_checkpoint_metadata=True,
+            log_checkpoint=False,
+            log_checkpoint_metadata=False,
             num_eval_images=0)]
 
     output_root = '/opt/ml/baseline/mmdetection/work_dirs/'
@@ -60,21 +60,21 @@ def modify_config(cfg, args):
     output_dir = args.exp_name
     if not os.path.exists(output_root + output_dir):
         os.makedirs(output_root + output_dir) # 저장 경로 없으면 생성
-    cfg.work_dir = output_root + output_dir # 저장 경로 변경
+    cfg.work_dir = output_root + output_dir 
    
     cfg.seed = args.seed
     cfg.gpu_ids = [0]
     roi_head_type = 0
     no_roi_head = ['RetinaNet','PPA','YOLOV3' 'TOOD']
-    if cfg.model.type in no_roi_head : #roi head가 없으면
+    if cfg.model.type in no_roi_head :
         cfg.model.bbox_head.num_classes = 10 
     
-    else : #일단 그 외는 아래로 정의. cfg 하나씩 보고 조건 추가해주자
+    else : # roi head가 존재하면
         if isinstance(cfg.model.roi_head.bbox_head, list):
             for i in range(len(cfg.model.roi_head.bbox_head)):
                 cfg.model.roi_head.bbox_head[i].num_classes = 10 
                 roi_head_type = 1
-        else : #그냥 딕셔너리면
+        else : 
             cfg.model.roi_head.bbox_head.num_classes = 10 
             roi_head_type = 2
     
@@ -126,3 +126,4 @@ if __name__ == '__main__':
 
 ## exp_name : 이름스펠링_modeltype_neck~ 뒤는 알아서 맘대로 
 ## (ex) dh_cascade_rcnn_fpn_1,2,3...
+
