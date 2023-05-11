@@ -78,8 +78,8 @@ def modify_config(cfg, args):
         dict(type='MMDetWandbHook',
             init_kwargs={'project': 'mmdetection'},
             interval=10,
-            log_checkpoint=True,
-            log_checkpoint_metadata=True,
+            log_checkpoint=False,
+            log_checkpoint_metadata=False,
             num_eval_images=0)]
 
 
