@@ -8,6 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 import yaml
 import random
+import datetime
 
 
 class Averager:
@@ -29,6 +30,18 @@ class Averager:
     def reset(self):
         self.current_total = 0.0
         self.iterations = 0.0
+
+
+def get_save_folder_name():
+    """파일을 날짜별로 폴더에 저장하고 싶을 때, 폴더명을 만들어주는 함수
+
+    Returns:
+       str: "2023-05-12"와 같이 폴더명으로 사용할 문자열 반환
+    """
+    today = datetime.datetime.now()
+    save_folder_name = f"{today.year}-{today.month}-{today.day}"
+
+    return save_folder_name
 
 
 def get_device():

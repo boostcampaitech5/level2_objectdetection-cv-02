@@ -7,7 +7,7 @@ import datetime
 
 import my_optimizer
 from transform import get_train_transform, get_valid_transform
-from utils import seed_everything, load_config, collate_fn, get_device
+from utils import seed_everything, load_config, collate_fn, get_device, get_save_folder_name
 from trainer.faster_rcnn_trainer import train_fn
 from model.baseline_model import get_fasterrcnn_resnet50_fpn
 from my_dataset import CustomDataset
@@ -57,31 +57,28 @@ def get_data(configs: str):
 if __name__ == "__main__":
     wandb.init(project="object-detection-torchvision", reinit=True)
     
-    today = datetime.datetime.now()
-    save_folder_path = f'{today.year}-{today.month}-{today.day}'
-
     # args 설정
     args = parse_args()
 
     # yaml config 파일 가져오기
     configs = load_config(args.config_path)
 
-    # seed 세팅
+    # 기본 환경 세팅
+    # 1. seed 세팅
     seed_everything(configs.seed)
 
-    # device 지정
+    # 2. device 지정
     device = get_device()   
     
-    # 기본 환경 세팅
-    # 1. 데이터로더 세팅
+    # 3. 데이터로더 세팅
     train_data_loader, valid_data_loader = get_data(configs)
 
-    # 2. 모델 세팅
+    # 4. 모델 세팅
     model = get_fasterrcnn_resnet50_fpn()
     model.to(device)
     params = [p for p in model.parameters() if p.requires_grad]
 
-    # 3. optimizer 세팅
+    # 5. optimizer 세팅
     opt_cfg = configs['hparams']['optimizer']
 
     my_opt = None
@@ -90,8 +87,11 @@ if __name__ == "__main__":
                                       opt_cfg['lr'],
                                       opt_cfg['momentum'],
                                       opt_cfg['weight_decay'])
+        
+    # 6. 학습한 모델을 저장할 경로 설정
+    save_folder_name = get_save_folder_name()
     
     # 학습 시작!
     train_fn(configs['hparams']['epochs'],
              train_data_loader, valid_data_loader,
-             my_opt, model, device, save_folder_path)
+             my_opt, model, device, save_folder_name)
