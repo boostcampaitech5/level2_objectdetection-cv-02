@@ -80,6 +80,18 @@ def collate_fn(batch):
 
 
 def calculate_mAP(preds, gt_anns_path, score_threshold):
+    f"""제공받았던 mission 코드를 변형하여, mAP를 계산해주는 함수.
+
+    Args:
+        preds (_type_): 모델이 예측한 결과로, list[dict] 형태를 따름.
+                        하나의 dict는 image_id, boxes, scores, labels에 대한 정보를 담고 있음.
+        gt_anns_path (_type_): 모델이 예측한 결과와 비교할 정답 파일이 존재하는 경로.
+        score_threshold (_type_): mAP를 계산할 때 기준이 될 IoU threshold 값.
+                                낮을수록 mAP는 높아지고, 높을수록 mAP는 낮아짐.
+
+    Returns:
+        _type_: 계산한 mAP 값과 클래스 별 AP 값을 반환함.
+    """
     coco = COCO(gt_anns_path)
 
     # outputs을 submission 파일을 생성하는 것처럼 형식에 맞춰 변환하기
@@ -119,7 +131,7 @@ def calculate_mAP(preds, gt_anns_path, score_threshold):
             new_pred.append([file_name, box[0], box[1], float(box[2]), float(box[4]), float(box[3]), float(box[5])])
 
 
-    # TODO: gt 파일을 불러와서, pascal voc format으로 변환하기
+    # gt 파일을 불러와서, pascal voc format으로 변환하기
     gt = []
 
     for image_id in coco.getImgIds():    
@@ -135,8 +147,9 @@ def calculate_mAP(preds, gt_anns_path, score_threshold):
                     float(annotation['bbox'][0]) + float(annotation['bbox'][2]),
                     float(annotation['bbox'][1]),
                     (float(annotation['bbox'][1]) + float(annotation['bbox'][3]))])
-        
-    mean_ap, average_precisions = mean_average_precision_for_boxes(gt, new_pred, iou_threshold=0.5)
+    
+    # format을 통일한 gt와 preds를 가지고 mAP 계산.
+    mean_ap, average_precisions = mean_average_precision_for_boxes(gt, new_pred, iou_threshold=score_threshold)
 
     return mean_ap, average_precisions
 

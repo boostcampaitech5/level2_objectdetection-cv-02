@@ -6,12 +6,22 @@ from tqdm import tqdm
 from utils import calculate_mAP
 
 # TODO: test_loader가 batch 단위로 들어왔을 때 에러 해결
-def evaluate(test_loader, model, device):
+def evaluate(test_loader, model, cfgs, device):
+    """모델 성능을 평가할 때 사용하는 함수.
+
+    Args:
+        test_loader (_type_): 평가 데이터셋의 dataloader. e.g., validation, test
+        model (_type_): 성능을 평가할 object detection 모델
+        cfgs (dict): 사전에 정의한 yaml 파일을 불러온 dict 형식의 설정 값들.
+        device (_type_): 학습에 사용할 장비 e.g., cuda, cpu
+
+    Returns:
+        _type_: mAP(클래스 별 AP를 평균낸 결과), APs(클래스 별 AP)
+    """
     model.to(device)
     model.eval()
 
     with torch.no_grad():
-        # Batches
         outputs = []
         for images, targets, image_ids in tqdm(test_loader, desc='Evaluating'):
             images = list(image.float().to(device) for image in images)
@@ -26,12 +36,12 @@ def evaluate(test_loader, model, device):
             
 
         # Calculate mAP
-        mean_ap, ap = calculate_mAP(outputs, "/opt/ml/dataset/train.json", 0.1)
-        print(mean_ap)
+        mean_ap, ap = calculate_mAP(outputs, cfgs['path']['valid_annotation'], cfgs['valid']['score_threshold'])
     
     return mean_ap, ap
 
 
+# Test Code
 if __name__ == "__main__":
     import torchvision
     from torch.utils.data import DataLoader

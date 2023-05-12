@@ -68,6 +68,7 @@ def get_dataloader(configs: str):
 
 
 if __name__ == "__main__":
+    # wandb 세팅
     wandb.init(project="object-detection-torchvision", reinit=True)
     
     # args 설정
@@ -76,9 +77,12 @@ if __name__ == "__main__":
     # yaml config 파일 가져오기
     configs = load_config(args.config_path)
 
+    # wandb에 config 업로드하기 (running name 추가, 기록 설정해야 함)
+    wandb.config.update(configs)
+
     # 기본 환경 세팅
     # 1. seed 세팅
-    seed_everything(configs.seed)
+    seed_everything(configs['setting']['seed'])
 
     # 2. device 지정
     device = get_device()   
@@ -105,6 +109,5 @@ if __name__ == "__main__":
     save_folder_name = get_save_folder_name()
     
     # 학습 시작!
-    train_fn(configs['hparams']['epochs'],
-             train_data_loader, valid_data_loader,
+    train_fn(configs, train_data_loader, valid_data_loader,
              my_opt, model, device, save_folder_name)
