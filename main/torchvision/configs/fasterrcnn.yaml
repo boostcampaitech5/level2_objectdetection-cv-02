@@ -1,0 +1,34 @@
+# TODO: yaml 파일 보다 깔끔하게 구조화
+# dataset
+path:
+  # train_annotation: /opt/ml/baseline/level2_objectdetection-cv-02/main/detectron2/json/detectron2_train.json
+  # train_annotation: ./json/detectron2_train.json
+  train_annotation: /opt/ml/dataset/train.json
+  valid_annotation: /opt/ml/dataset/train.json
+  test_annotation: /opt/ml/dataset/test.json
+  image_dir: /opt/ml/dataset
+# model
+model:
+  name: FasterRCNN
+# basic hyper-parameters
+hparams:
+  epochs: 12
+  optimizer:
+    name: sgd
+    lr: 0.001
+    momentum: 0.9
+    weight_decay: 0.0005
+# train
+train:
+  batch_size: 16
+  shuffle: True
+  num_workers: 2
+valid:
+  batch_size: 1
+  shuffle: False
+  num_workers: 2
+test:
+  score_threshold: 0.05 # inference 시 모델이 예측한 결과와 GT 간의 IoU threshold를 설정합니다.
+  batch_size: 8
+  shuffle: False
+  num_workser: 2
