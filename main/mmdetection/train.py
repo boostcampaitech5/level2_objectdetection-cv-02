@@ -95,6 +95,8 @@ def modify_config(cfg, args):
     cfg.data.test.img_prefix = root
     cfg.data.test.ann_file = root + 'test.json' # test json 정보
 
+    cfg.evaluation.classwise = True
+    
     #batch_size 수정
     cfg.data.samples_per_gpu = args.batch_size
 
