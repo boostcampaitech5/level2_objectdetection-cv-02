@@ -1,4 +1,7 @@
 # TODO: yaml 파일 보다 깔끔하게 구조화
+# 기본 설정
+setting:
+  seed: 42
 # dataset
 path:
   # train_annotation: /opt/ml/baseline/level2_objectdetection-cv-02/main/detectron2/json/detectron2_train.json

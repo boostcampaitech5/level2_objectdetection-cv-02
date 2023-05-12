@@ -17,7 +17,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Object Detection Train by torchvision')
 
     # parser
-    parser.add_argument('--seed', type=int, default=42, help='Fixed Seed (default : 42)')
     parser.add_argument('--config_path', type=str, default='./configs/fasterrcnn.yaml', help='select config path (default : ./configs/fasterrcnn.yaml)')
     
     args = parser.parse_args()
@@ -56,7 +55,7 @@ def get_data(configs: str):
 
 
 if __name__ == "__main__":
-    # wandb.init(project="torchvision", reinit=True)
+    wandb.init(project="object-detection-torchvision", reinit=True)
     
     today = datetime.datetime.now()
     save_folder_path = f'{today.year}-{today.month}-{today.day}'
@@ -64,14 +63,16 @@ if __name__ == "__main__":
     # args 설정
     args = parse_args()
 
+    # yaml config 파일 가져오기
+    configs = load_config(args.config_path)
+
     # seed 세팅
-    seed_everything(args.seed)
+    seed_everything(configs.seed)
 
     # device 지정
     device = get_device()
 
-    # yaml config 파일 가져오기
-    configs = load_config(args.config_path)
+    
     
     # 기본 환경 세팅
     # 1. 데이터로더 세팅
