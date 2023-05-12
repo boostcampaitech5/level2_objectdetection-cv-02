@@ -70,9 +70,7 @@ if __name__ == "__main__":
     seed_everything(configs.seed)
 
     # device 지정
-    device = get_device()
-
-    
+    device = get_device()   
     
     # 기본 환경 세팅
     # 1. 데이터로더 세팅
