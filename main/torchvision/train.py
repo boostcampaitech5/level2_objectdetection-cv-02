@@ -14,6 +14,11 @@ from my_dataset import CustomDataset
 
 
 def parse_args():
+    """터미널 상에서 사용자가 입력한 argument를 저장하는 함수.
+
+    Returns:
+        _type_: 사용자가 입력한 argument를 반환
+    """
     parser = argparse.ArgumentParser(description='Object Detection Train by torchvision')
 
     # parser
@@ -24,7 +29,15 @@ def parse_args():
     return args
 
 
-def get_data(configs: str):
+def get_dataloader(configs: str):
+    """yaml 파일에 정의되어있는 경로를 바탕으로, dataset을 만들고 dataloader를 반환해주는 함수.
+
+    Args:
+        configs (str): ./configs/ 아래에 정의해둔 yaml 파일을 load_config() 함수로 불러오고, 이를 넘겨주어야 함.
+
+    Returns:
+        torch.utils.data.DataLoader : train과 validation dataloader를 반환함
+    """
     print(f'Default setting...', end='')
     # 데이터셋 불러오기
     train_annotation = configs['path']['train_annotation']
@@ -71,7 +84,7 @@ if __name__ == "__main__":
     device = get_device()   
     
     # 3. 데이터로더 세팅
-    train_data_loader, valid_data_loader = get_data(configs)
+    train_data_loader, valid_data_loader = get_dataloader(configs)
 
     # 4. 모델 세팅
     model = get_fasterrcnn_resnet50_fpn()
