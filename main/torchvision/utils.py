@@ -12,6 +12,9 @@ import datetime
 
 
 class Averager:
+    """
+    training 과정의 loss를 계산할 때 사용하는 클래스입니다.
+    """
     def __init__(self):
         self.current_total = 0.0
         self.iterations = 0.0
@@ -80,7 +83,7 @@ def collate_fn(batch):
 
 
 def calculate_mAP(preds, gt_anns_path, score_threshold):
-    f"""제공받았던 mission 코드를 변형하여, mAP를 계산해주는 함수.
+    """제공받았던 mission 코드를 변형하여, mAP를 계산해주는 함수.
 
     Args:
         preds (_type_): 모델이 예측한 결과로, list[dict] 형태를 따름.

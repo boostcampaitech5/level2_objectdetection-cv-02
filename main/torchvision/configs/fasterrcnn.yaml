@@ -1,6 +1,9 @@
 # TODO: yaml 파일 보다 깔끔하게 구조화
 setting: # 기본 설정
   seed: 42
+augmentation: # 기본 augmentation 관련
+  img_height: 1024
+  img_width: 1024
 path: # dataset 경로
   train_annotation: /opt/ml/dataset/train.json
   valid_annotation: /opt/ml/dataset/train.json

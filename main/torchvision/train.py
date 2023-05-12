@@ -45,8 +45,8 @@ def get_dataloader(configs: str):
 
     data_dir = configs['path']['image_dir']
 
-    train_dataset = CustomDataset(train_annotation, data_dir, get_train_transform())
-    valid_dataset = CustomDataset(valid_annotation, data_dir, get_valid_transform())
+    train_dataset = CustomDataset(train_annotation, data_dir, get_train_transform(configs['augmentation']))
+    valid_dataset = CustomDataset(valid_annotation, data_dir, get_valid_transform(configs['augmentation']))
 
     # 데이터로더 생성
     train_data_loader= DataLoader(

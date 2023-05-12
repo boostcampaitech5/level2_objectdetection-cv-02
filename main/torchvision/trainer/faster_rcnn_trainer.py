@@ -1,4 +1,5 @@
 import torch
+import wandb
 
 import os
 from tqdm import tqdm
@@ -51,8 +52,28 @@ def train_fn(cfgs: dict, train_data_loader, val_data_loader,
         
         print(f"Epoch #{epoch+1} train loss: {train_loss_hist.value}")
 
+        # wandb logging - train
+        wandb.log({
+            "Train/loss": train_loss_hist.value,
+        })
+
         # validation_loop
         mean_ap, ap = evaluate(val_data_loader, model, cfgs, device)
+
+        # wandb logging - validation
+        wandb.log({
+            "mAP50": mean_ap,
+            "AP-General trash": ap['0'][0],
+            "AP-Paper": ap['1'][0],
+            "AP-Paper pack": ap['2'][0],
+            "AP-Metal": ap['3'][0],
+            "AP-Glass": ap['4'][0],
+            "AP-Plastic": ap['5'][0],
+            "AP-Styrofoam": ap['6'][0],
+            "AP-Plastic bag": ap['7'][0],
+            "AP-Battery": ap['8'][0],
+            "AP-Clothing": ap['9'][0],
+        })
 
               
         # validation set의 mAP 기준으로 모델을 저장
