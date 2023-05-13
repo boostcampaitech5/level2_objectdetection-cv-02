@@ -12,7 +12,22 @@ import os
 import wandb
 import json
 from pipeline import get_testpipeline, get_trainpipeline, get_valpipeline
+import torch
+import numpy as np
+import random
 
+def seed_everything(seed):
+    '''
+    PyTorch, Numpy, cfg seed 고정 함수
+    '''
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if use multi-GPU
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(seed)
+    random.seed(seed)
+    
 def wandb_config(cfg,args):
     """
       Parameters to save in wandb  
@@ -96,7 +111,7 @@ def modify_config(cfg, args):
     cfg.data.test.ann_file = root + 'test.json' # test json 정보
 
     cfg.evaluation.classwise = True
-    
+    cfg.evaluation.save_best = 'bbox_mAP_50'
     #batch_size 수정
     cfg.data.samples_per_gpu = args.batch_size
 
@@ -150,6 +165,7 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
+    seed_everything(args.seed) 
     cfg = Config.fromfile(args.config)  
     modify_config(cfg, args)  
     model = build_detector(cfg.model)
