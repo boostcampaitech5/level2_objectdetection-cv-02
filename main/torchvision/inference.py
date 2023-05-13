@@ -15,12 +15,15 @@ import pandas as pd
 from tqdm import tqdm
 
 from my_dataset import TestDataset
-from utils import load_config, inference_fn, get_device
+from utils import load_config, inference_fn, get_device, get_save_folder_name
 from model.baseline_model import get_fasterrcnn_resnet50_fpn
 
 
 
-def inference(config, model_path, save_folder_path):
+def inference(config_path, model_path, save_folder_path):
+    save_file_name = config_path.split('.')[1].split('/')[-1]
+    config = load_config(config_path)
+
     annotation = config['path']['test_annotation'] # annotation 경로
     data_dir = config['path']['image_dir'] # dataset 경로
     test_dataset = TestDataset(annotation, data_dir)
@@ -64,8 +67,8 @@ def inference(config, model_path, save_folder_path):
     submission['PredictionString'] = prediction_strings
     submission['image_id'] = file_names
     
-    print("Save a new submission...")
-    save_path = f'./submission/{save_folder_path}/faster_rcnn_torchvision_submission.csv'
+    print("Save a new submission...", end=' ')
+    save_path = f'./submission/{save_folder_path}/{save_file_name}_submission.csv'
     save_dir = os.path.dirname(save_path)
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -76,15 +79,14 @@ def inference(config, model_path, save_folder_path):
 
 
 if __name__ == "__main__":
-    # 1. 모델 config가 담겨있는 yaml 파일 로드
-    config = load_config("./configs/fasterrcnn.yaml")
+    # 1. 모델 config가 담겨있는 yaml 파일 경로 정의
+    config_path = "./configs/fasterrcnn4_adam.yaml"
 
     # 2. 학습한 모델의 weight 파일 경로 지정
-    model_weight = '/opt/ml/baseline/level2_objectdetection-cv-02/main/torchvision/checkpoints/2023-5-12/faster_rcnn_torchvision_checkpoints1.pth' # 체크포인트 경로
+    model_weight = '/opt/ml/baseline/level2_objectdetection-cv-02/main/torchvision/checkpoints/2023-5-13/fasterrcnn4_adam_checkpoints.pth' # 체크포인트 경로
 
     # 3. inference 결과를 저장할 폴더 지정
-    today = datetime.datetime.now()
-    save_folder_path = f'{today.year}-{today.month}-{today.day}'
+    save_folder_path = get_save_folder_name()
 
     # 4. inference
-    inference(config, model_weight, save_folder_path)
+    inference(config_path, model_weight, save_folder_path)

@@ -57,6 +57,7 @@ def train_fn(cfgs: dict, train_data_loader, val_data_loader,
 
         # wandb logging - train
         wandb.log({
+            "Epoch": epoch+1,
             "Train/loss": train_loss_hist.value,
         })
         
@@ -65,6 +66,7 @@ def train_fn(cfgs: dict, train_data_loader, val_data_loader,
 
         # wandb logging - validation
         wandb.log({
+            "Epoch": epoch+1,
             "mAP50": mean_ap,
             "AP-General trash": ap['0'][0],
             "AP-Paper": ap['1'][0],

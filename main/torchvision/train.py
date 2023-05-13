@@ -6,7 +6,7 @@ import wandb
 import datetime
 from pprint import pprint
 
-import my_optimizer
+from my_optimizer import MyOptimizer
 from transform import get_train_transform, get_valid_transform
 from utils import seed_everything, load_config, collate_fn, get_device, get_save_folder_name
 from trainer.faster_rcnn_trainer import train_fn
@@ -98,21 +98,17 @@ if __name__ == "__main__":
     params = [p for p in model.parameters() if p.requires_grad]
 
     # 5. optimizer 세팅
-    opt_cfg = configs['hparams']['optimizer']
-
-    my_opt = None
-    if opt_cfg['name'] == 'sgd':
-        my_opt = my_optimizer.get_sgd(params,
-                                      opt_cfg['lr'],
-                                      opt_cfg['momentum'],
-                                      opt_cfg['weight_decay'])
+    opt_cfg = configs['optimizer']
+    my_opt = MyOptimizer(params, opt_cfg)
+    my_opt = my_opt()
         
     # 6. 학습한 모델을 저장할 경로 설정
-    save_file_name = args.config_path.split('.')[0].split('/')[-1]
+    save_file_name = args.config_path.split('.')[1].split('/')[-1]
     save_folder_name = get_save_folder_name()
 
     # 7. wandB 실험 이름 설정
-    wandb.run.name = f"{configs['setting']['who']}-{save_file_name}" # e.g., sy-fasterrcnn
+    run_name = f"{configs['setting']['who']}-{save_file_name}"
+    wandb.run.name = run_name # e.g., sy-fasterrcnn
     
     # 학습 시작!
     train_fn(configs, train_data_loader, valid_data_loader,
