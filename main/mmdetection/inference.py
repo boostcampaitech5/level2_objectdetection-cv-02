@@ -30,7 +30,17 @@ def modify_config(cfg, args):
     cfg = Config.fromfile(args.cfg_file)
     pth_name = args.pth_name 
     cfg.work_dir = args.work_dir
-    
+
+    no_roi_head = ['RetinaNet','PPA','YOLOV3', 'DeformableDETR' ,'TOOD', 'GFL']
+    if cfg.model.type in no_roi_head : 
+        cfg.model.bbox_head.num_classes = 10 
+    else : 
+            if isinstance(cfg.model.roi_head.bbox_head, list):
+                for i in range(len(cfg.model.roi_head.bbox_head)):
+                    cfg.model.roi_head.bbox_head[i].num_classes = 10 
+            else : 
+                cfg.model.roi_head.bbox_head.num_classes = 10   
+
     cfg.data.test.classes = classes
     cfg.data.test.img_prefix = root
     cfg.data.test.ann_file = root + 'test.json'
