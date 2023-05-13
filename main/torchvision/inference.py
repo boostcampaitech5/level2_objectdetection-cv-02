@@ -80,7 +80,7 @@ if __name__ == "__main__":
     config = load_config("./configs/fasterrcnn.yaml")
 
     # 2. 학습한 모델의 weight 파일 경로 지정
-    model_weight = '/opt/ml/baseline/level2_objectdetection-cv-02/main/torchvision/checkpoints/2023-5-12/faster_rcnn_torchvision_checkpoints.pth' # 체크포인트 경로
+    model_weight = '/opt/ml/baseline/level2_objectdetection-cv-02/main/torchvision/checkpoints/2023-5-12/faster_rcnn_torchvision_checkpoints1.pth' # 체크포인트 경로
 
     # 3. inference 결과를 저장할 폴더 지정
     today = datetime.datetime.now()

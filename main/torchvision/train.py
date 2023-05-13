@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader
 import argparse
 import wandb
 import datetime
+from pprint import pprint
 
 import my_optimizer
 from transform import get_train_transform, get_valid_transform
@@ -76,6 +77,7 @@ if __name__ == "__main__":
 
     # yaml config 파일 가져오기
     configs = load_config(args.config_path)
+    pprint(configs)
 
     # wandb에 config 업로드하기 (running name 추가, 기록 설정해야 함)
     wandb.config.update(configs)
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     # 3. 데이터로더 세팅
     train_data_loader, valid_data_loader = get_dataloader(configs)
 
-    # 4. 모델 세팅
+    # 4. 모델 세팅 (변경 예정)
     model = get_fasterrcnn_resnet50_fpn()
     model.to(device)
     params = [p for p in model.parameters() if p.requires_grad]
@@ -106,8 +108,12 @@ if __name__ == "__main__":
                                       opt_cfg['weight_decay'])
         
     # 6. 학습한 모델을 저장할 경로 설정
+    save_file_name = args.config_path.split('.')[0].split('/')[-1]
     save_folder_name = get_save_folder_name()
+
+    # 7. wandB 실험 이름 설정
+    wandb.run.name = f"{configs['setting']['who']}-{save_file_name}" # e.g., sy-fasterrcnn
     
     # 학습 시작!
     train_fn(configs, train_data_loader, valid_data_loader,
-             my_opt, model, device, save_folder_name)
+             my_opt, model, device, save_folder_name, save_file_name)

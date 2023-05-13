@@ -5,14 +5,14 @@ augmentation: # 기본 augmentation 관련
   img_height: 1024
   img_width: 1024
 path: # dataset 경로
-  train_annotation: /opt/ml/dataset/train.json
-  valid_annotation: /opt/ml/dataset/train.json
+  train_annotation: ./json/detectron2_train.json
+  valid_annotation: ./json/detectron2_val.json
   test_annotation: /opt/ml/dataset/test.json
   image_dir: /opt/ml/dataset
 model: # model 관련 설정들 (추가 예정)
   name: FasterRCNN
 hparams: # 기본적인 hyper-parameters
-  epochs: 12
+  epochs: 48
   optimizer:
     name: sgd
     lr: 0.001

@@ -78,10 +78,11 @@ def load_config(config_file):
     return config
 
 
-def collate_fn(batch):    
+def collate_fn(batch):
     return tuple(zip(*batch))
 
 
+# TODO: 코드 정리 필요
 def calculate_mAP(preds, gt_anns_path, score_threshold):
     """제공받았던 mission 코드를 변형하여, mAP를 계산해주는 함수.
 
@@ -101,8 +102,10 @@ def calculate_mAP(preds, gt_anns_path, score_threshold):
     bboxes = []
     file_names = []
 
+    imgIDs = []
     for pred in preds:
-        imgID = pred['image_id']
+        imgID = pred['image_id'][0]
+        imgIDs.append(imgID)
         prediction_string = ''
         image_info = coco.loadImgs(coco.getImgIds(imgIds=imgID))[0]
         for box, score, label in zip(pred['boxes'], pred['scores'], pred['labels']):
@@ -134,10 +137,10 @@ def calculate_mAP(preds, gt_anns_path, score_threshold):
             new_pred.append([file_name, box[0], box[1], float(box[2]), float(box[4]), float(box[3]), float(box[5])])
 
 
-    # gt 파일을 불러와서, pascal voc format으로 변환하기
+    # gt 파일을 불러와서, pascal voc format으로 변환하기 -> CustomDataset의 특성 때문에, 계산이 이상하게 될 수도 있음
     gt = []
 
-    for image_id in coco.getImgIds():    
+    for image_id in imgIDs:
         image_info = coco.loadImgs(image_id)[0]
         annotation_id = coco.getAnnIds(imgIds=image_info['id'])
         annotation_info_list = coco.loadAnns(annotation_id)
