@@ -6,11 +6,9 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
 import torch
-# faster rcnn model이 포함된 library
-import torchvision
-
 from torch.utils.data import DataLoader
-import datetime
+
+import argparse
 import pandas as pd
 from tqdm import tqdm
 
@@ -18,6 +16,22 @@ from my_dataset import TestDataset
 from utils import load_config, inference_fn, get_device, get_save_folder_name
 from model.baseline_model import get_fasterrcnn_resnet50_fpn
 
+
+def parse_args():
+    """터미널 상에서 사용자가 입력한 argument를 저장하는 함수.
+
+    Returns:
+        _type_: 사용자가 입력한 argument를 반환
+    """
+    parser = argparse.ArgumentParser(description='Object Detection Inference based on torchvision')
+
+    # parser
+    parser.add_argument('--config_path', type=str, default='./configs/fasterrcnn.yaml', help='select config path (default : ./configs/fasterrcnn.yaml)')
+    parser.add_argument('--checkpoints', type=str, default='/checkpoints/2023-5-12/fasterrcnn_base_checkpoints.pth', help='define a path of the pretrained model weights (default : /checkpoints/2023-5-12/fasterrcnn_base_checkpoints.pth')')
+
+    args = parser.parse_args()
+
+    return args
 
 
 def inference(config_path, model_path, save_folder_path):
@@ -79,14 +93,11 @@ def inference(config_path, model_path, save_folder_path):
 
 
 if __name__ == "__main__":
-    # 1. 모델 config가 담겨있는 yaml 파일 경로 정의
-    config_path = "./configs/fasterrcnn4_adam.yaml"
+    # 1. yaml 파일 경로와 학습시킨 모델의 weight 파일 경로를 argument로 입력
+    args = parse_args()
 
-    # 2. 학습한 모델의 weight 파일 경로 지정
-    model_weight = '/opt/ml/baseline/level2_objectdetection-cv-02/main/torchvision/checkpoints/2023-5-13/fasterrcnn4_adam_checkpoints.pth' # 체크포인트 경로
-
-    # 3. inference 결과를 저장할 폴더 지정
+    # 2. inference 결과를 저장할 폴더 지정
     save_folder_path = get_save_folder_name()
 
-    # 4. inference
-    inference(config_path, model_weight, save_folder_path)
+    # 3. inference
+    inference(args.config_path, args.checkpoints, save_folder_path)

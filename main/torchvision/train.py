@@ -20,7 +20,7 @@ def parse_args():
     Returns:
         _type_: 사용자가 입력한 argument를 반환
     """
-    parser = argparse.ArgumentParser(description='Object Detection Train by torchvision')
+    parser = argparse.ArgumentParser(description='Object Detection Train based on torchvision')
 
     # parser
     parser.add_argument('--config_path', type=str, default='./configs/fasterrcnn.yaml', help='select config path (default : ./configs/fasterrcnn.yaml)')
