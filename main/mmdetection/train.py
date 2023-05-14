@@ -1,5 +1,4 @@
 # 모듈 import
-
 from mmcv import Config
 from mmdet.datasets import build_dataset
 from mmdet.models import build_detector
@@ -11,7 +10,7 @@ import argparse
 import os
 import wandb
 import json
-from pipeline import get_testpipeline, get_trainpipeline, get_valpipeline
+from pipeline import get_pipeline
 import torch
 import numpy as np
 import random
@@ -54,14 +53,14 @@ def modify_pipeline(cfg, args) :
     #     cfg.data.val.pipeline[1]['img_scale'] = (1024,1024)
     #     cfg.data.test.pipeline[1]['img_scale'] = (1024,1024)
 
-    #train pipeline 
-    cfg.data.train.pipeline = get_trainpipeline(args.pipeline, trash_norm = args.trash_norm)
-
+    #load_pipline
+    load_pipline = get_pipeline(args.pipeline, trash_norm = args.trash_norm)
+    #train pipeline
+    cfg.data.train.pipeline = load_pipline['train']
     #validation pipeline
-    cfg.data.val.pipeline = get_valpipeline(args.pipeline, trash_norm = args.trash_norm)
-
+    cfg.data.val.pipeline = load_pipline['val']
     #test pipeline 
-    cfg.data.test.pipeline = get_testpipeline(args.pipeline, trash_norm = args.trash_norm)
+    cfg.data.test.pipeline = load_pipline['test']
 
 def modify_config(cfg, args):
     f"""Modify the variable within the config to suit the task
