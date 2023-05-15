@@ -1,4 +1,4 @@
-def CustomAugmentation(img_norm_cfg):
+def Make_CustomAugmentation(img_norm_cfg):
     """
     img_norm_cfg(dict) : img_normalization setting 
     """

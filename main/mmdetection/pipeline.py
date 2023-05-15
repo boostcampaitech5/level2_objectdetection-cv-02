@@ -1,4 +1,5 @@
-from augmentation import BaseAugmentation, CustomAugmentation
+from augmentation.BaseAugmentation import Make_BaseAugmentation
+from augmentation.CustomAugmentation import Make_CustomAugmentation
 
 
 def get_pipeline(select = "BaseAugmentation", custom_version = None, trash_norm = False) :
@@ -19,9 +20,9 @@ def get_pipeline(select = "BaseAugmentation", custom_version = None, trash_norm 
             to_rgb=True)
 
     if select == "BaseAugmentation":     
-        pipeline = BaseAugmentation(img_norm_cfg)
-    elif select == 'CustomAugmentation':
-        pipeline = CustomAugmentation(img_norm_cfg)
+        pipeline = Make_BaseAugmentation(img_norm_cfg)
+    elif select == "CustomAugmentation":
+        pipeline = Make_CustomAugmentation(img_norm_cfg)
 
     return pipeline
 
