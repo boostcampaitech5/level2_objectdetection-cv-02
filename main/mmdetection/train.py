@@ -54,14 +54,17 @@ def modify_pipeline(cfg, args) :
     #     cfg.data.test.pipeline[1]['img_scale'] = (1024,1024)
 
     #load_pipline
+    
     load_pipline = get_pipeline(args.pipeline, trash_norm = args.trash_norm)
+
     #train pipeline
     cfg.data.train.pipeline = load_pipline['train']
     #validation pipeline
     cfg.data.val.pipeline = load_pipline['val']
     #test pipeline 
     cfg.data.test.pipeline = load_pipline['test']
-
+    
+    return cfg
 def modify_config(cfg, args):
     f"""Modify the variable within the config to suit the task
         Parameters : 
@@ -95,7 +98,7 @@ def modify_config(cfg, args):
             log_checkpoint=False,
             log_checkpoint_metadata=False,
             num_eval_images=0)]
-
+    
 
     cfg.data.train.classes = classes
     cfg.data.train.img_prefix = root
@@ -166,7 +169,8 @@ if __name__ == '__main__':
     args = parse_args()
     seed_everything(args.seed) 
     cfg = Config.fromfile(args.config)  
-    modify_config(cfg, args)  
+    cfg = modify_config(cfg, args)
+    cfg = modify_pipeline(cfg, args)
     model = build_detector(cfg.model)
     model.init_weights() 
     datasets = [build_dataset(cfg.data.train)]
