@@ -42,8 +42,13 @@ def train_fn(cfgs: dict, train_data_loader, val_data_loader,
 
             # calculate loss
             loss_dict = model(images, targets)
+            
+            cl_loss = loss_dict['loss_classifier']
+            bbox_reg_loss = loss_dict['loss_box_reg']
+            bg_fg_cl_loss = loss_dict['loss_objectness']
+            rpn_bbox_reg_loss = loss_dict['loss_rpn_box_reg']
 
-            losses = sum(loss for loss in loss_dict.values())
+            losses = 1.5 * cl_loss + bbox_reg_loss + bg_fg_cl_loss + rpn_bbox_reg_loss
             loss_value = losses.item()
 
             train_loss_hist.send(loss_value)
@@ -53,12 +58,22 @@ def train_fn(cfgs: dict, train_data_loader, val_data_loader,
             losses.backward()
             optimizer.step()
         
-        print(f"Epoch #{epoch+1} train loss: {train_loss_hist.value}")
+        print(f"<<<<Epoch #{epoch+1}>>>>\n\
+              classification_loss: {cl_loss}\n\
+              bbox_regression_loss: {bbox_reg_loss}\n\
+              background & foreground classification loss: {bg_fg_cl_loss}\n\
+              rpn bbox regression loss: {rpn_bbox_reg_loss}\n\
+              ----------------------------------------------------------------\n\
+              total train loss: {train_loss_hist.value}")
 
         # wandb logging - train
         wandb.log({
             "Epoch": epoch+1,
             "Train/loss": train_loss_hist.value,
+            "Train/cl_loss": cl_loss,
+            "Train/bbox_reg_loss": bbox_reg_loss,
+            "Train/bg_fg_cl_loss": bg_fg_cl_loss,
+            "Train/rpn_bbox_reg_loss": rpn_bbox_reg_loss
         })
         
         # validation_loop

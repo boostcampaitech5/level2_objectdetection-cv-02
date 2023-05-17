@@ -1,5 +1,8 @@
 import torchvision
-from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
+
+from torch.hub import load_state_dict_from_url
+from torchvision.models.detection.backbone_utils import resnet_fpn_backbone
+from torchvision.models.detection.faster_rcnn import FastRCNNPredictor, FasterRCNN
 
 
 def get_fasterrcnn_resnet50_fpn(pretrained:bool=True, progress:bool=True,

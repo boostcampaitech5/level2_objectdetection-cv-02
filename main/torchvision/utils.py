@@ -132,12 +132,10 @@ def calculate_mAP(preds, gt_anns_path, score_threshold):
             continue
         else: # else에 걸리는 경우는 모델이 물체 탐지를 못한 경우?
             continue # 학습이 덜 되었다면 물체를 탐지하지 못할 수도 있음 -> 무시
-            # raise Exception('error', 'invalid box count')
         for box in boxes:
             new_pred.append([file_name, box[0], box[1], float(box[2]), float(box[4]), float(box[3]), float(box[5])])
 
 
-    # gt 파일을 불러와서, pascal voc format으로 변환하기 -> CustomDataset의 특성 때문에, 계산이 이상하게 될 수도 있음
     gt = []
 
     for image_id in imgIDs:
@@ -161,6 +159,16 @@ def calculate_mAP(preds, gt_anns_path, score_threshold):
 
 
 def inference_fn(test_data_loader, model, device):
+    """inference용 함수.
+
+    Args:
+        test_data_loader (_type_): inference할 데이터로더
+        model (_type_): inference할 모델
+        device (_type_): inference할 장치
+
+    Returns:
+        _type_: 모델의 예측 결과. list[dict]
+    """
     outputs = []
     for images in tqdm(test_data_loader):
         # gpu 계산을 위해 image.to(device)

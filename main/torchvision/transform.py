@@ -13,8 +13,8 @@ def get_train_transform(aug_cfgs):
     """
     return A.Compose([
         A.Resize(aug_cfgs['img_height'], aug_cfgs['img_width']),
-        A.RandomBrightness(p=0.5),
-        A.RandomContrast(p=0.5),
+        A.RandomBrightness(p=0.2),
+        A.RandomContrast(p=0.2),
         A.Flip(p=0.5),
         ToTensorV2(p=1.0)
     ], bbox_params={'format': 'pascal_voc', 'label_fields': ['labels']})

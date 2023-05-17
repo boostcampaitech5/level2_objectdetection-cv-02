@@ -10,7 +10,7 @@ from my_optimizer import MyOptimizer
 from transform import get_train_transform, get_valid_transform
 from utils import seed_everything, load_config, collate_fn, get_device, get_save_folder_name
 from trainer.faster_rcnn_trainer import train_fn
-from model.baseline_model import get_fasterrcnn_resnet50_fpn
+import model.baseline_model as baseline_model
 from my_dataset import CustomDataset
 
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     train_data_loader, valid_data_loader = get_dataloader(configs)
 
     # 4. 모델 세팅 (변경 예정)
-    model = get_fasterrcnn_resnet50_fpn()
+    model = baseline_model.get_fasterrcnn_resnext101_32x8d_fpn()
     model.to(device)
     params = [p for p in model.parameters() if p.requires_grad]
 

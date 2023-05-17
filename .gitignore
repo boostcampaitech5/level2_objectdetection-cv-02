@@ -1,0 +1,10 @@
+# torchvision
+main/torchvision/__pycache__
+main/torchvision/checkpoints
+main/torchvision/model/__pycache__
+main/torchvision/submission
+main/torchvision/trainer/__pycache__
+main/torchvision/configs/.ipynb_checkpoints
+main/torchvision/.ipynb_checkpoints
+main/torchvision/wandb
+*.out

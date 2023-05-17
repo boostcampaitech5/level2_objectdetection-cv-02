@@ -1,9 +1,5 @@
 from pycocotools.coco import COCO
-from pycocotools.cocoeval import COCOeval
 import os
-
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
 
 import torch
 from torch.utils.data import DataLoader
@@ -27,7 +23,7 @@ def parse_args():
 
     # parser
     parser.add_argument('--config_path', type=str, default='./configs/fasterrcnn.yaml', help='select config path (default : ./configs/fasterrcnn.yaml)')
-    parser.add_argument('--checkpoints', type=str, default='/checkpoints/2023-5-12/fasterrcnn_base_checkpoints.pth', help='define a path of the pretrained model weights (default : /checkpoints/2023-5-12/fasterrcnn_base_checkpoints.pth')')
+    parser.add_argument('--checkpoints', type=str, default='/checkpoints/2023-5-12/fasterrcnn_base_checkpoints.pth', help='define a path of the pretrained model weights (default : /checkpoints/2023-5-12/fasterrcnn_base_checkpoints.pth')
 
     args = parser.parse_args()
 
@@ -35,6 +31,13 @@ def parse_args():
 
 
 def inference(config_path, model_path, save_folder_path):
+    """submission.csv 파일을 생성하는 함수
+
+    Args:
+        config_path (_type_): 모델 및 실험에 대한 정보가 담겨있는 json 경로
+        model_path (_type_): 모델이 저장되어 있는 경로
+        save_folder_path (_type_): 모델을 저장할 폴더의 경로
+    """
     save_file_name = config_path.split('.')[1].split('/')[-1]
     config = load_config(config_path)
 

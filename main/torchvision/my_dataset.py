@@ -7,6 +7,7 @@ from pycocotools.coco import COCO
 import random
 import cv2
 import os
+import math
 
 
 class CustomDataset(Dataset):
@@ -24,11 +25,7 @@ class CustomDataset(Dataset):
         # coco annotation 불러오기 (coco API)
         self.coco = COCO(annotation)
         self.image_ids = self.coco.getImgIds() # type: list
-        self.predictions = {
-            "images": self.coco.dataset["images"].copy(),
-            "categories": self.coco.dataset["categories"].copy(),
-            "annotations": None
-        }
+
         self.transforms = transforms
     
 
@@ -90,6 +87,12 @@ class CustomDataset(Dataset):
 
 class TestDataset(Dataset):
     def __init__(self, annotation, data_dir):
+        """Test를 위한 데이터셋
+
+        Args:
+            annotation (_type_): test data에 대한 정보를 가지고 있는 json 파일 경로
+            data_dir (_type_): 원본 이미지 데이터의 경로
+        """
         super().__init__()
         self.data_dir = data_dir
         # coco annotation 불러오기 (coco API)
@@ -121,5 +124,3 @@ if __name__ == "__main__":
     annotation = "/opt/ml/baseline/level2_objectdetection-cv-02/main/detectron2/json/detectron2_train.json"
     data_dir = "/opt/ml/dataset"
 
-    my_dataset = CustomDataset(annotation, data_dir)
-    print(my_dataset.coco.getImgIds())

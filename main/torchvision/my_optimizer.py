@@ -27,18 +27,3 @@ class MyOptimizer:
         sgd = optim.SGD(params, lr, momentum, weight_decay)
 
         return sgd
-
-"""
-def get_optimizer(opt_cfg):
-    pass
-
-
-def load_adam(params, lr=0.001, betas=(0.), eps, weight_decay, amsgrad):
-    adam = optim.Adam(params, lr, betas, eps, weight_decay, amsgrad)
-
-
-def load_sgd(params, lr, momentum, weight_decay):
-    sgd = optim.SGD(params, lr, momentum, weight_decay)
-
-    return sgd
-"""
