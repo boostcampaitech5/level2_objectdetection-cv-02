@@ -4,7 +4,7 @@ import torch
 import os 
 
 from detectron2 import model_zoo
-
+from tridentnet import add_tridentnet_config
 
 def seed_everything(seed):
     """_summary_
@@ -33,14 +33,18 @@ def train_config_setting(cfg:dict, args:dict, save_dir:str):
     Returns:
         cfg : 변경된 config 파일 리턴
     """
-    cfg.merge_from_file(model_zoo.get_config_file(f'{args.config_path}/{args.model}.yaml'))
+    if "tridentnet" in args.model:
+        add_tridentnet_config(cfg)
+        cfg.merge_from_file('tridentnet/config/tridentnet_fast_R_101_C4_3x.yaml')
+    else:
+        cfg.merge_from_file(model_zoo.get_config_file(f'{args.config_path}/{args.model}.yaml'))
+        cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(f'{args.config_path}/{args.model}.yaml')
 
     cfg.DATASETS.TRAIN = ('coco_trash_train',)
     cfg.DATASETS.TEST = ('coco_trash_val',)
 
     cfg.DATALOADER.NUM_WOREKRS = 2
 
-    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(f'{args.config_path}/{args.model}.yaml')
     cfg.MODEL.MASK_ON = False
     cfg.SOLVER.IMS_PER_BATCH = 5
 
@@ -52,14 +56,14 @@ def train_config_setting(cfg:dict, args:dict, save_dir:str):
     cfg.SOLVER.MAX_ITER = max_iter
     cfg.SOLVER.STEPS = (2000, 4000)
     cfg.SOLVER.GAMMA = 0.005
-    cfg.SOLVER.CHECKPOINT_PERIOD = 1000
+    cfg.SOLVER.CHECKPOINT_PERIOD = 3000
 
     cfg.OUTPUT_DIR = save_dir
 
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 128
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10
 
-    cfg.TEST.EVAL_PERIOD = 1000
+    cfg.TEST.EVAL_PERIOD = 3000
 
     #save config
     with open(f"{save_dir}/{args.model}.yaml", "w") as f:
@@ -88,8 +92,8 @@ def inference_config_setting(cfg:dict, args:dict, save_dir:str):
 
     cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, args.model_file_name)
 
-    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 256
+    cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 128
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10
-    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.3
+    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.01
 
     return cfg

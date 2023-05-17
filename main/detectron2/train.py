@@ -38,7 +38,7 @@ def parse_args():
     parser.add_argument('--save_dir', type=str, default='./save/')
     parser.add_argument('--name', type=str, default='ho', help="spelling your name (default : ho)"  )
     parser.add_argument('--config_path', type=str, default='COCO-Detection', help='select config path (default : COCO-Detection/)')
-    parser.add_argument('--model', type=str, default='faster_rcnn_R_101_FPN_3x', help='train model name (default : faster_rcnn_R_101_FPN_3x)')
+    parser.add_argument('--model', type=str, default='faster_rcnn_R_101_FPN_3x', help='train model name (default : faster_rcnn_R_101_FPN_3x) if you use tridentnet write tridentnet')
     parser.add_argument('--epochs', type=int, default=10, help='train epochs (default = 10)')
     args = parser.parse_args()
     return args
