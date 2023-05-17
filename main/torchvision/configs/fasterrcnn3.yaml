@@ -1,0 +1,35 @@
+# TODO: yaml 파일 보다 깔끔하게 구조화
+setting: # 기본 설정
+  who: sy
+  seed: 42
+augmentation: # 기본 augmentation 관련
+  img_height: 1024
+  img_width: 1024
+path: # dataset 경로
+  train_annotation: ./json/detectron2_train.json
+  valid_annotation: ./json/detectron2_val.json
+  test_annotation: /opt/ml/dataset/test.json
+  image_dir: /opt/ml/dataset
+model: # model 관련 설정들 (추가 예정)
+  name: FasterRCNN
+hparams: # 기본적인 hyper-parameters
+  epochs: 12
+optimizer:
+  name: sgd
+  lr: 0.001
+  momentum: 0.9
+  weight_decay: 0.0005
+train: # train dataloader 세팅
+  batch_size: 16
+  shuffle: True
+  num_workers: 2
+valid: # valid dataloader 세팅
+  score_threshold: 0.5 # evaluation 시 모델이 예측한 결과와 GT 간의 IoU threshold를 설정합니다. -> threshold 미만인 박스들은 예측하지 않았다고 판단합니다
+  batch_size: 1
+  shuffle: False
+  num_workers: 2
+test: # inference 시 IoU threshold, test dataloader 설정
+  score_threshold: 0.05 # inference 시 모델이 예측한 결과와 GT 간의 IoU threshold를 설정합니다.
+  batch_size: 8
+  shuffle: False
+  num_workser: 2

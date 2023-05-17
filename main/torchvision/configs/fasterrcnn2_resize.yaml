@@ -1,0 +1,35 @@
+# TODO: yaml 파일 보다 깔끔하게 구조화
+setting: # 기본 설정 (정상 동작)
+  who: sy
+  seed: 42
+augmentation: # 기본 augmentation 관련 (정상 동작)
+  img_height: 512
+  img_width: 512
+path: # dataset 경로 (비정상 동작)
+  train_annotation: /opt/ml/dataset/train.json
+  valid_annotation: /opt/ml/dataset/train.json
+  test_annotation: /opt/ml/dataset/test.json
+  image_dir: /opt/ml/dataset
+model: # model 관련 설정들 (추가 및 확인 예정)
+  name: FasterRCNN
+hparams: # 기본적인 hyper-parameters (확인 예정)
+  epochs: 12
+optimizer:
+  name: sgd
+  lr: 0.001
+  momentum: 0.9
+  weight_decay: 0.0005
+train: # train dataloader 세팅 (정상 동작)
+  batch_size: 16
+  shuffle: True
+  num_workers: 2
+valid: # valid dataloader 세팅 (정상 동작)
+  score_threshold: 0.5 # evaluation 시 모델이 예측한 결과와 GT 간의 IoU threshold를 설정합니다. (단 LB test는 mAP50 기준이므로 변경하지 않는게 좋습니다.)
+  batch_size: 1
+  shuffle: False
+  num_workers: 2
+test: # inference 시 IoU threshold, test dataloader 설정 (정상 동작)
+  score_threshold: 0.05 # inference 시 모델이 예측한 결과와 GT 간의 IoU threshold를 설정합니다.
+  batch_size: 8
+  shuffle: False
+  num_workser: 2
