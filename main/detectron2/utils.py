@@ -35,7 +35,8 @@ def train_config_setting(cfg:dict, args:dict, save_dir:str):
     """
     if "tridentnet" in args.model:
         add_tridentnet_config(cfg)
-        cfg.merge_from_file('tridentnet/config/tridentnet_fast_R_101_C4_3x.yaml')
+        # cfg.merge_from_file('tridentnet/config/tridentnet_fast_R_101_C4_3x.yaml')
+        cfg.merge_from_file(f'{args.config_path}/{args.model}.yaml')
     else:
         cfg.merge_from_file(model_zoo.get_config_file(f'{args.config_path}/{args.model}.yaml'))
         cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(f'{args.config_path}/{args.model}.yaml')
