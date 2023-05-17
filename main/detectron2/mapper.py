@@ -12,6 +12,10 @@ def MyMapper(dataset_dict):
     transform_list = [
         T.Resize((1024, 1024)),
         T.RandomFlip(prob=0.5, horizontal=True, vertical=False),
+        T.RandomBrightness(0.8, 1.8),
+        T.RandomContrast(0.6, 1.3),
+        T.RandomRotation(angle=0.5),
+        T.RandomLighting(scale=0.5), # 내가 설정한 값 0.5    
     ]
     
     image, transforms = T.apply_transform_gens(transform_list, image)
