@@ -53,6 +53,7 @@ def modify_config(cfg, args):
     cfg.gpu_ids = [1]
     cfg.optimizer_config.grad_clip = dict(max_norm=35, norm_type=2)
     cfg.model.train_cfg = None
+    cfg.model.test_cfg.score_thr = args.confidence_thr
     
     return cfg
 
@@ -77,7 +78,7 @@ def data_load(cfg):
     checkpoint_path = os.path.join(cfg.work_dir, f'{args.pth_name}.pth')
     model = build_detector(cfg.model, test_cfg=cfg.get('test_cfg'))
     if args.nms_iou_thr:
-        model.test_cfg.iou_threshold = args.nms_iou_thr
+        model.test_cfg.nms.iou_threshold = args.nms_iou_thr
     checkpoint = load_checkpoint(model, checkpoint_path, map_location='cpu')
     model.CLASSES = dataset.CLASSES
     model = MMDataParallel(model.cuda(), device_ids=[0])
@@ -131,7 +132,7 @@ def parse_args():
     parser.add_argument('--work_dir', required=True, help='Directory to save the output files (default: 2022)')
     parser.add_argument('--pth_name', required=True, help='Name of the PyTorch checkpoint file to save the trained model')
     parser.add_argument('--submission', required=True, help='Directory name to save the submission files and to log results with Weights & Biases')
-    parser.add_argument('--show_score_thr', type=float, default=0.05, help='Detection score threshold for visualization (default: 0.05)') #결과 이미지에 표시할 객체
+    parser.add_argument('--confidence_thr', type=float, default=0.05, help='confidence threshold value when you make a submission.csv (default: 0.05)') # confidence score threshold
     parser.add_argument('--nms_iou_thr', type=float, help='IoU threshold used in NMS') #검출된 객체의 중복을 제거
 
     
