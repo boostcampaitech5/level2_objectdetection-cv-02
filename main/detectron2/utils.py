@@ -82,7 +82,11 @@ def inference_config_setting(cfg:dict, args:dict, save_dir:str):
     Returns:
         cfg : 변경된 config 파일 리턴
     """
-    cfg.merge_from_file(model_zoo.get_config_file(f'{args.config_path}/{args.model}.yaml'))
+    if "tridentnet" in args.model:
+        add_tridentnet_config(cfg)
+        cfg.merge_from_file(f'{args.config_path}/config/{args.model}.yaml')
+    else:
+        cfg.merge_from_file(model_zoo.get_config_file(f'{args.config_path}/{args.model}.yaml'))
 
     cfg.DATASETS.TEST = ('coco_trash_test',)
 
