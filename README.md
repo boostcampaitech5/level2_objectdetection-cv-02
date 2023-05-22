@@ -15,9 +15,9 @@
 |:-:|:-:|:-:|
 |김성한|Detectron2 (cascade, tridentnet, faster rcnn, retinanet) 실험, Ensemble|[Happy-ryan](https://github.com/Happy-ryan)|
 |박수영|Detectron2, Torchvision Faster R-CNN 실험, Yolo v6 실험, mAP metric 분석|[nstalways](https://github.com/nstalways)|
-|이다현|Mmdetection baseline 구성 및 실험, Pseudo labeling/Ensemble 실험|[Eumgil98](https://github.com/Eumgill98)|
+|이다현|Mmdetection baseline 구성 및 실험, Pseudo labeling/Ensemble 실험|[DaHyeonnn](https://github.com/DaHyeonnn)|
 |이채원|Mmdetection training baseline 구성 및 실험, 모델 Backbone 및 TTA 실험|[Chaewon829](https://github.com/Chaewon829)|
-|정호찬|Detectron2 실험, MMdetection-Cascade Swin L RCNN 실험, Augmentation 실험|[DaHyeonnn](https://github.com/DaHyeonnn)|
+|정호찬|Detectron2 실험, MMdetection-Cascade Swin L RCNN 실험, Augmentation 실험|[Eumgil98](https://github.com/Eumgill98)|
 
 ### 📝 **Dataset 개요**
 - - -
