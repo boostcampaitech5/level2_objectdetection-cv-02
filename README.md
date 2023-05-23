@@ -1,4 +1,47 @@
-## **재활용 품목 분류를 위한 Object Detection (Naver Boostcamp AI Tech CV-02조 팀 멋쟁이)**
+# 🎈팀소개
+![Team](https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F99a5e5c2-ad5e-4d2a-a554-cfacecc799f3%2FDALLE_2023-04-26_17.09.59_-_Pyrrhula_pixel_art.png?table=block&id=702a1a2c-36f2-4f8e-8d45-eed1fc9ec677&spaceId=2ffb041d-0709-41f6-bc28-0a55b5ef44b1&width=250&userId=7b237939-ce12-402c-9498-2035f38d8877&cache=v2)
+
+`팀 이름 : 멋쟁이`  
+
+### 👩‍👧‍👦멤버
+<table>
+    <tr height="160px">
+        <td align="center" width="150px">
+            <a href="https://github.com/Happy-ryan"><img height="120px" width="120px" src="https://avatars.githubusercontent.com/u/101412264?v=4"/></a>
+            <br/>
+            <a href="https://github.com/Happy-ryan"><strong>김성한</strong></a>
+            <br />
+        </td>
+        <td align="center" width="150px">
+            <a href="https://github.com/nstalways"><img height="120px" width="120px" src=https://avatars.githubusercontent.com/u/90047145?v=4"/></a>
+            <br />
+            <a href="https://github.com/nstalways"><strong>박수영</strong></a>
+            <br />
+        </td>
+        <td align="center" width="150px">
+            <a href="https://github.com/DaHyeonnn"><img height="120px" width="120px" src="https://avatars.githubusercontent.com/u/90945094?v=4"/></a>
+            <br/>
+            <a href="https://github.com/DaHyeonnn"><strong>이다현</strong></a>
+            <br />
+        </td>
+        <td align="center" width="150px">
+            <a href="https://github.com/Chaewon829"><img height="120px" width="120px" src="https://avatars.githubusercontent.com/u/126534080?v=4"/></a>
+            <br/>
+            <a href="https://github.com/Chaewon829"><strong>이채원</strong></a>
+            <br />
+        </td>
+        <td align="center" width="150px">
+            <a href="https://github.com/Eumgill98"><img height="120px" width="120px" src="https://avatars.githubusercontent.com/u/108447906?v=4"/></a>
+            <br />
+            <a href="https://github.com/Eumgill98"><strong>정호찬</strong></a>
+            <br />
+        </td>
+    </tr>
+</table>
+
+<br><br>
+
+## **☑️재활용 품목 분류를 위한 Object Detection Naver Boostcamp AI Tech**
 
 ### 📌 **대회 정보**
 - - -
@@ -8,8 +51,8 @@
     - robust한 모델 설계 (e.g., train/test data에 대한 성능차이가 작은 모델 설계)
     - 적극적인 GitHub 활용을 통한 협업 진행 (e.g., GitHub flow 활용)
 - **대회 일정** : 23.05.03 ~ 23.05.18 19:00 (2주)
-
-### 🐦 **Members**
+                
+### 🐦 **Members 역할**
 - - -
 |**이름**|**역할**|**github**|
 |:-:|:-:|:-:|
@@ -75,6 +118,8 @@ main
 
 ### 🐧 **최종 결과**
 - - -
+**🏅Private score :** `9 / 19`  
+**🏅Public score :** ` 9 / 19`
 ```
 Model
 ├── 2 Stage Model
